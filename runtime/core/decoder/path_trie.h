@@ -23,13 +23,10 @@ class PathTrie {
   PathTrie* GetPathTrie(int new_char, int new_time_step, float log_prob_c);
   // Get the prefix in index from root to current node
   PathTrie* GetPathVec(std::vector<int>* output, std::vector<int>* time_steps);
-  // Get the prefix in index from some stop node to current node
-  PathTrie* GetPathVec(std::vector<int>* output, std::vector<int>* time_steps,
-                       int stop);
   // Update log probs
   void IterateToVec(std::vector<PathTrie*>* output);
 
-  bool is_empty() const { return ROOT_ == character; }
+  bool empty() const { return root_ == character; }
   // Remove current path from root
   void remove();
 
@@ -44,7 +41,7 @@ class PathTrie {
   PathTrie* parent;
 
  private:
-  int ROOT_;
+  const int root_ = -1;
   bool exists_;
   std::vector<std::pair<int, PathTrie*>> children_;
 };

@@ -14,11 +14,10 @@ PathTrie::PathTrie() {
   log_prob_nb_cur = -kFloatMax;
   log_prob_c = -kFloatMax;
   score = -kFloatMax;
-  character = -1;
+  character = root_;
   time_step = 0;
   parent = nullptr;
 
-  ROOT_ = -1;
   exists_ = true;
   children_.clear();
 }
@@ -31,9 +30,6 @@ PathTrie::~PathTrie() {
 
 bool PathTrie::prefix_compare(const PathTrie* x, const PathTrie* y) {
   if (x->score == y->score) {
-    if (x->character == y->character) {
-      return false;
-    }
     return x->character < y->character;
   }
   return x->score > y->score;
@@ -69,19 +65,14 @@ PathTrie* PathTrie::GetPathTrie(int new_char, int new_time_step,
 
 PathTrie* PathTrie::GetPathVec(std::vector<int>* output,
                                std::vector<int>* time_steps) {
-  return GetPathVec(output, time_steps, ROOT_);
-}
-
-PathTrie* PathTrie::GetPathVec(std::vector<int>* output,
-                               std::vector<int>* time_steps, int stop) {
-  if (character == stop || character == ROOT_) {
+  if (character == root_) {
     std::reverse(output->begin(), output->end());
     std::reverse(time_steps->begin(), time_steps->end());
     return this;
   }
   output->emplace_back(character);
   time_steps->emplace_back(time_step);
-  return parent->GetPathVec(output, time_steps, stop);
+  return parent->GetPathVec(output, time_steps);
 }
 
 void PathTrie::IterateToVec(std::vector<PathTrie*>* output) {
