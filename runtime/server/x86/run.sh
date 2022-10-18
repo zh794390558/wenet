@@ -21,12 +21,14 @@ wav_path=zh.wav
 model_dir=20220506_u2pp_conformer_libtorch/
 
 export GLOG_logtostderr=1
-export GLOG_v=3
+#export GLOG_v=3
+export DNNL_VERBOSE=0
 #./build/decoder_main \
 #	--chunk_size 16 \
 #	--wav_path $wav_path \
 #	--model_path $model_dir/final.zip \
 #	--dict_path $model_dir/units.txt 2>&1 | tee log.txt
+
 
 #wav_scp=wav.aishell.test.scp
 wav_scp=wav.scp
@@ -36,5 +38,8 @@ dict_path=$model_dir/units.txt
 	--chunk_size 16 \
 	--wav_scp $wav_scp \
 	--result $result \
+	--ctc_weight 0.5 \
+	--reverse_weight 0.3 \
+	--rescoring_weight 1.0 \
 	--model_path $model_dir/final.zip \
 	--dict_path $dict_path 2>&1 | tee log.txt
